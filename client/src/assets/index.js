@@ -39,6 +39,7 @@ import xho from './Xho.png';
 
 // logo
 import logo from './logo.svg';
+import altlogo from './logo.png';
 
 // icon
 import attack from './attack.png';
@@ -127,6 +128,7 @@ export {
   xho,
 
   logo,
+  altlogo,
 
   attack,
   defense,
