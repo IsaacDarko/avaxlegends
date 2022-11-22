@@ -9,7 +9,7 @@ import styles from '../styles';
 const Home = () => {
   const navigate = useNavigate();
   const[playerName, setPlayerName] = useState('');
-  const {checkWallet, contract, walletAddress, setShowAlert, updateCurrentWalletAddress} = useGlobalContext('');
+  const {summonedPlayer, contract, walletAddress, setShowAlert, updateCurrentWalletAddress} = useGlobalContext('');
 
   //handles the add-player functionality by calling the isPlayer function from the contract
   const handleClick = async () => {
@@ -18,7 +18,7 @@ const Home = () => {
       console.log(contract);
       console.log(walletAddress);
       //check if the current wallet already has a player registered
-      const playerExists = await contract.isPlayer(walletAddress);
+      const playerExists = await contract.isPlayer(wallet);
       if(!playerExists){
         await contract.registerPlayer(playerName, playerName);
         setShowAlert({
@@ -26,10 +26,13 @@ const Home = () => {
           type:'info',
           message: `${playerName} is being summoned`
         })
+        console.log('done registering');
+      }else{
+        console.log('Player is registered already');
       }
+      
     }catch(error){
       console.log(error);
-
       setShowAlert({
         status:true,
         type:'failure',
@@ -38,22 +41,26 @@ const Home = () => {
     }
   }
 
+
+
   useEffect(() => {
+    console.log(walletAddress);
     const checkPlayerToken = async () => {
       const playerExists = await contract.isPlayer(walletAddress);
       const pTokenExists = await contract.isPlayerToken(walletAddress);
-
-      if(playerExists && pTokenExists)  navigate('/create-battle')
+      console.log(playerExists);
+      console.log(pTokenExists);
+      if(playerExists && pTokenExists)  navigate('/create-battle');
     }
+    
     checkPlayerToken();
   }, [contract])
 
 
-  useEffect(() => {
-    checkWallet();
-  }, [contract])
 
-
+  
+  
+  
   return (
 
     <div className='flex flex-col'>

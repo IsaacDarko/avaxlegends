@@ -13,9 +13,14 @@ export const GlobalContextProvider = ({ children }) => {
     const [contract, setContract] = useState('');
     const [walletAddress, setWalletAddress] = useState('');
     const [accountConnected, setAccountConnected] = useState(false);
-    const [showAlert, setShowAlert] = useState({ status: false, type: 'info', message: '' });
-
+    const [summonedPlayer, setSummonedPlayer] = useState('')
     const [battleName, setBattleName] = useState('');
+    const [showAlert, setShowAlert] = useState({ status: false, type: 'info', message: '' });
+    const [gameData, setGameData] = useState({ player:[], pendingBattles:[], activeBattle: null });
+    const [updateGameData, setUpdateGameData] = useState(0);
+    const [battleGround, setBattleGround] = useState('bg-astral')
+
+    
 
     const navigate = useNavigate();
 
@@ -30,8 +35,8 @@ export const GlobalContextProvider = ({ children }) => {
                 const currentAccount = accounts[0];
                 localStorage.removeItem('walletAddress');
                 localStorage.setItem('walletAddress', currentAccount);
-                setWalletAddress(accounts[0]);
-                setAccountConnected(true);
+                setWalletAddress(currentAccount);
+                setAccountConnected(true);          
             } 
         }catch(error){
             console.log(error);
@@ -76,10 +81,8 @@ export const GlobalContextProvider = ({ children }) => {
 
 
     useEffect(() => {
-        if(contract){            
-            const wallet = localStorage.getItem('walletAddress');
-            setWalletAddress(wallet)
-            createEventListeners({ navigate, contract, provider, walletAddress, setShowAlert });
+        if(contract){        
+            createEventListeners({ summonedPlayer, setSummonedPlayer, navigate, contract, provider, walletAddress, setShowAlert, setUpdateGameData });
         }
     }, [contract]);
 
@@ -96,7 +99,36 @@ export const GlobalContextProvider = ({ children }) => {
             },[5000])
             return () => clearTimeout(timer)
         }
-    }, [showAlert])
+    }, [showAlert]);
+
+
+
+    //set game data to state
+    useEffect(() =>{
+        const wallet = localStorage.getItem('walletAddress');
+        setWalletAddress(wallet);
+        const fetchGameData = async () =>{
+            if(contract){
+                const fetchedBattles = await contract.getAllBattles();
+                const pendingBattles = fetchedBattles.filter((battle) => battle.battleStatus === 0);
+                let activeBattle = null
+                console.log(walletAddress)
+                fetchedBattles.forEach((battle) => { 
+                    if(battle.players.find((player) => player.toLowerCase() === walletAddress.toLowerCase())){
+                        if(battle.winner.startsWith('0x00')){
+                            activeBattle = battle
+                        }
+                    }
+                })
+                setGameData({
+                    pendingBattles: pendingBattles.slice(1),
+                    activeBattle: activeBattle
+                })
+            }
+        }
+
+        fetchGameData();
+    }, [contract])
 
 
 
@@ -104,8 +136,9 @@ export const GlobalContextProvider = ({ children }) => {
         <GlobalContext.Provider value={{
             contract, provider, updateCurrentWalletAddress,
             walletAddress, accountConnected, checkWallet,
-            showAlert, setShowAlert,
-            battleName, setBattleName,
+            setWalletAddress, summonedPlayer, setSummonedPlayer, 
+            gameData, battleName, setBattleName, updateGameData,
+            battleGround, setBattleGround, showAlert, setShowAlert, 
             demo:'test'
         }}>
             {children}

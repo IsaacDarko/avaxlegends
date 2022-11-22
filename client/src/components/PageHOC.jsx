@@ -31,7 +31,7 @@ const PageHOC = (Component, title, description) => () => {
                     <Component />
                 </div>
 
-                <p className={styles.footerText}>Made By Signet Labs</p>
+                <p className={styles.footerText}>Developed By Signet Labs</p>
             </div>
 
             <div className='flex flex-1'>
