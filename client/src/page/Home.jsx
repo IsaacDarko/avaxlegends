@@ -9,7 +9,15 @@ import styles from '../styles';
 const Home = () => {
   const navigate = useNavigate();
   const[playerName, setPlayerName] = useState('');
-  const {summonedPlayer, contract, walletAddress, setShowAlert, updateCurrentWalletAddress} = useGlobalContext('');
+  const {gameData, contract, walletAddress, setShowAlert, updateCurrentWalletAddress} = useGlobalContext('');
+
+
+
+  useEffect(() => {
+      if(gameData?.activeBattle?.battleStatus === 1) navigate(`/battle/${gameData.activeBattle.name}`);
+  }, [gameData]);
+
+
 
   //handles the add-player functionality by calling the isPlayer function from the contract
   const handleClick = async () => {
