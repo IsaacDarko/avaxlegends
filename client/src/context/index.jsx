@@ -24,6 +24,21 @@ export const GlobalContextProvider = ({ children }) => {
 
     const navigate = useNavigate();
 
+    //* Set battleground to local storage
+    useEffect(() => {
+        const isBattleground = localStorage.getItem('battleground');
+
+        if (isBattleground) {
+        setBattleGround(isBattleground);
+        } else {
+        localStorage.setItem('battleground', battleGround);
+        }
+    }, []);
+
+
+
+
+
     //update the current wallet address
     const updateCurrentWalletAddress = async () => {
         try{
