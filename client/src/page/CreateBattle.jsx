@@ -8,7 +8,7 @@ import { useGlobalContext } from '../context';
 
 const CreateBattle = () => {
   const [waitBattle, setWaitBattle] = useState(false)
-  const { walletAddress, setWalletAddress, contract, battleName, setBattleName, gameData} = useGlobalContext();
+  const { walletAddress, setErrorMessage, contract, battleName, setBattleName, gameData} = useGlobalContext();
   const navigate = useNavigate();
 
 
@@ -18,7 +18,7 @@ const CreateBattle = () => {
       await contract.createBattle(battleName, {gasLimit : 200000})
       setWaitBattle(true)
     }catch(error){
-      console.log(error)
+      setErrorMessage(error)
     }
   }
 

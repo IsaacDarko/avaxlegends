@@ -10,7 +10,7 @@ import { playAudio } from '../utils/animation';
 
 
 const Battle = () => {
-    const { walletAddress, contract, showAlert, setShowAlert, gameData, battleGround } = useGlobalContext();
+    const { walletAddress, contract, showAlert, setShowAlert, gameData, battleGround, setErrorMessage, player1Ref, player2Ref } = useGlobalContext();
     const [player1, setPlayer1] = useState({});
     const [player2, setPlayer2] = useState({});
     const navigate = useNavigate();
@@ -60,13 +60,37 @@ const Battle = () => {
                 setPlayer2({...player02, att: 'X', def: 'X', health: p2H, mana: p2M});
 
             }catch(error){
-                console.log(error)
+                setErrorMessage(error)
             } 
 
         }
 
         if(contract && gameData.activeBattle) getPlayerInfo();
-    }, [contract, battleName, gameData])
+    }, [contract, battleName, gameData]);
+
+
+    const makeAMove = async (choice) => {
+        playAudio(choice === 1 ? attackSound : defenseSound);
+        try{
+            await contract.attackOrDefendChoice(choice, battleName, {gasLimit : 200000});
+            setShowAlert({
+                status: true,
+                type: 'info',
+                message: `Initiating ${choice === 1 ? 'attack' : 'defense'}`
+            })
+        }catch(error){
+            setErrorMessage(error);
+        }
+    }
+
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            if(!gameData?.activeBattle) navigate('/');
+        }, [5000]);
+
+        return () => clearTimeout(timer)
+    }, [])
 
 
 
@@ -81,34 +105,34 @@ const Battle = () => {
                 <Card 
                   card={player2}
                   title={player2.playerName}
-                  cardRef=''
+                  cardRef={player2Ref}
                   playerTwo
                 />
 
                 <div className='flex items-center flex-row'>
                     <ActionButton 
                      imgUrl={attack}
-                     handleClick={() => {}}
+                     handleClick={() => makeAMove(1)}
                      restStyles='mr-2 hover:border-yellow-400'
                     />
 
                     <Card 
-                        card={player1}
-                        title={player1.playerName}
-                        cardRef=''
-                        restStyles
+                     card={player1}
+                     title={player1.playerName}
+                     cardRef={player1Ref}
+                     restStyles
                     />
 
                     <ActionButton 
                      imgUrl={defense}
-                     handleClick={() => {}}
+                     handleClick={() => makeAMove(2)}
                      restStyles='ml-6 hover:border-red-600'
                     />
 
                 </div>
             </div>
 
-            <PlayerInfo player={player1} playerIcon={Player01Icon} mt />
+            <PlayerInfo player={player1} playerIcon={Player01Icon}  />
 
             <GameInfo />
             

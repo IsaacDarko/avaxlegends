@@ -9,7 +9,7 @@ import styles from '../styles';
 const Home = () => {
   const navigate = useNavigate();
   const[playerName, setPlayerName] = useState('');
-  const {gameData, contract, walletAddress, setShowAlert, updateCurrentWalletAddress} = useGlobalContext('');
+  const {gameData, contract, walletAddress, setShowAlert, setErrorMessage, setSummonedPlayer} = useGlobalContext('');
 
 
 
@@ -26,7 +26,7 @@ const Home = () => {
       console.log(contract);
       console.log(walletAddress);
       //check if the current wallet already has a player registered
-      const playerExists = await contract.isPlayer(wallet);
+      const playerExists = await contract.isPlayer(walletAddress);
       if(!playerExists){
         await contract.registerPlayer(playerName, playerName);
         setShowAlert({
@@ -35,12 +35,13 @@ const Home = () => {
           message: `${playerName} is being summoned`
         })
         console.log('done registering');
+        setSummonedPlayer(playerName)
       }else{
         console.log('Player is registered already');
       }
       
     }catch(error){
-      console.log(error);
+      setErrorMessage(error)
       setShowAlert({
         status:true,
         type:'failure',

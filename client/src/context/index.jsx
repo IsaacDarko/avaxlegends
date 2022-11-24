@@ -18,7 +18,11 @@ export const GlobalContextProvider = ({ children }) => {
     const [showAlert, setShowAlert] = useState({ status: false, type: 'info', message: '' });
     const [gameData, setGameData] = useState({ player:[], pendingBattles:[], activeBattle: null });
     const [updateGameData, setUpdateGameData] = useState(0);
-    const [battleGround, setBattleGround] = useState('bg-astral')
+    const [battleGround, setBattleGround] = useState('bg-astral');
+    const [errorMessage, setErrorMessage] = useState('');
+
+    const player1Ref = useRef();
+    const player2Ref = useRef();
 
     
 
@@ -97,7 +101,19 @@ export const GlobalContextProvider = ({ children }) => {
 
     useEffect(() => {
         if(contract){        
-            createEventListeners({ summonedPlayer, setSummonedPlayer, navigate, contract, provider, walletAddress, setShowAlert, setUpdateGameData });
+            createEventListeners({ 
+                summonedPlayer, 
+                setSummonedPlayer, 
+                navigate, 
+                contract, 
+                provider, 
+                setWalletAddress, 
+                walletAddress, 
+                setShowAlert, 
+                setUpdateGameData,
+                player1Ref,
+                player2Ref
+            });
         }
     }, [contract]);
 
@@ -115,6 +131,22 @@ export const GlobalContextProvider = ({ children }) => {
             return () => clearTimeout(timer)
         }
     }, [showAlert]);
+
+
+
+    useEffect(() => {
+        if(errorMessage){
+            const parsedErrorMessage = errorMessage?.reason?.slice('execution reverted: '.length).slice(0, -1);
+            if(parsedErrorMessage){
+                showAlert({
+                    status: true,
+                    type: 'failure',
+                    message: parsedErrorMessage
+                });
+            }
+        }
+        
+    }, [errorMessage])
 
 
 
@@ -154,7 +186,8 @@ export const GlobalContextProvider = ({ children }) => {
             setWalletAddress, summonedPlayer, setSummonedPlayer, 
             gameData, battleName, setBattleName, updateGameData,
             battleGround, setBattleGround, showAlert, setShowAlert, 
-            demo:'test'
+            errorMessage, setErrorMessage, player1Ref, player2Ref,
+             demo:'test'
         }}>
             {children}
         </GlobalContext.Provider>

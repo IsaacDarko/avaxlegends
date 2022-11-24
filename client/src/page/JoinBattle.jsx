@@ -9,7 +9,7 @@ import styles from '../styles';
 const JoinBattle = () => {
     const [waitBattle, setWaitBattle] = useState(false);
     const [walletAddress, setWalletAddress] = useState('')
-    const { contract, gameData, setShowAlert, setBattleName } = useGlobalContext();
+    const { contract, gameData, setShowAlert, setBattleName, setErrorMessage } = useGlobalContext();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -28,7 +28,7 @@ const JoinBattle = () => {
                 message: `Joining ${battleName}`
             })
         } catch (error) {
-            console.log(error)
+            setErrorMessage(error)
         }
     }
 
