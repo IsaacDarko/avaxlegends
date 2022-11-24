@@ -48,6 +48,28 @@ export const createEventListeners = ({ player1Ref, player2Ref, setSummonedPlayer
 
 
 
+    const NewGameTokenEventFilter = contract.filters.NewGameToken(); //get NewBattle event filter from the contract
+
+    //called AddNewEvent passing in the newBattleEventFilter so we are actively listening for this event emmitted by the contract
+    AddNewEvent(NewGameTokenEventFilter, provider, ({ args }) => {
+        const wallet = localStorage.getItem('walletAddress');
+        console.log(wallet);
+
+        console.log('New Game Token Created', args);
+
+        if(wallet.toLowerCase() === args.owner.toLowerCase()){
+            setShowAlert({
+                status: true,
+                type: 'success',
+                message: 'Player game token has been registered successfully'
+            })
+            navigate('/create-battle')
+        }
+    });
+
+
+
+
     const NewBattleEventFilter = contract.filters.NewBattle(); //get NewBattle event filter from the contract
 
     //called AddNewEvent passing in the newBattleEventFilter so we are actively listening for this event emmitted by the contract
@@ -90,18 +112,17 @@ export const createEventListeners = ({ player1Ref, player2Ref, setSummonedPlayer
             if(args.damagedPlayers[i] !== emptyAccount){
                 if(args.damagedPlayers[i] === walletAddress){
                     sparcle(getCoords(player1Ref))
-                   
+                    
                 }else if(args.damagedPlayers[i] !== walletAddress){
-                    sparcle(player2Ref)
+                    sparcle(getCoords(player2Ref))
                     
                 }
-                setUpdateGameData((prevUpdateGameData) => prevUpdateGameData + 1);
+                
             }else{
                 playAudio(defenseSound);
-                setUpdateGameData((prevUpdateGameData) => prevUpdateGameData + 1);
+                
             }
         }
-        
         setUpdateGameData((prevUpdateGameData) => prevUpdateGameData + 1);
     });
 
@@ -118,14 +139,14 @@ export const createEventListeners = ({ player1Ref, player2Ref, setSummonedPlayer
                 type: 'success',
                 message: 'You Won'
             })
-            navigate('/create-battle');
+            
         }else if(walletAddress.toLowerCase() === args.loser.toLowerCase()){
             setShowAlert({
                 status: true,
                 type: 'failure',
                 message: 'You lost'
             })
-            navigate('/create-battle');
+            
         }
         navigate('/create-battle');
     });

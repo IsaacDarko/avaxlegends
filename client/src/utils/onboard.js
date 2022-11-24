@@ -90,6 +90,10 @@ export const GetParams = async () => {
 
     return response;
   }
+
+  localStorage.removeItem('walletAddress');
+
+  localStorage.setItem('walletAddress', currentAccount)
   
   response.balance = currentBalance;
 

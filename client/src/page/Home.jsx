@@ -42,11 +42,7 @@ const Home = () => {
       
     }catch(error){
       setErrorMessage(error)
-      setShowAlert({
-        status:true,
-        type:'failure',
-        message: "Something went wrong"
-      })
+      
     }
   }
 
@@ -62,7 +58,7 @@ const Home = () => {
       if(playerExists && pTokenExists)  navigate('/create-battle');
     }
     
-    checkPlayerToken();
+    if(contract) checkPlayerToken();
   }, [contract])
 
 

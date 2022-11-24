@@ -10,11 +10,12 @@ import { playAudio } from '../utils/animation';
 
 
 const Battle = () => {
-    const { walletAddress, contract, showAlert, setShowAlert, gameData, battleGround, setErrorMessage, player1Ref, player2Ref } = useGlobalContext();
-    const [player1, setPlayer1] = useState({});
-    const [player2, setPlayer2] = useState({});
-    const navigate = useNavigate();
+    const {contract, showAlert, setShowAlert, gameData, battleGround, setErrorMessage, player1Ref, player2Ref } = useGlobalContext();
     const { battleName } = useParams();
+    const [player1, setPlayer1] = useState({});
+    const [player2, setPlayer2] = useState({});    
+
+    const navigate = useNavigate();
 
 
     useEffect(() => {
@@ -66,7 +67,9 @@ const Battle = () => {
         }
 
         if(contract && gameData.activeBattle) getPlayerInfo();
-    }, [contract, battleName, gameData]);
+    }, [contract, gameData, battleName]);
+
+
 
 
     const makeAMove = async (choice) => {
@@ -81,16 +84,20 @@ const Battle = () => {
         }catch(error){
             setErrorMessage(error);
         }
-    }
+    };
+
+
 
 
     useEffect(() => {
         const timer = setTimeout(() => {
             if(!gameData?.activeBattle) navigate('/');
-        }, [5000]);
+        }, [8000]);
 
         return () => clearTimeout(timer)
-    }, [])
+    }, []);
+
+
 
 
 
