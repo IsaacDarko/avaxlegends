@@ -295,7 +295,7 @@ contract AVAXLegends is ERC1155, Ownable, ERC1155Supply {
 
     _battle = getBattle(_battleName);
     uint _movesLeft = 2 - (_battle.moves[0] == 0 ? 0 : 1) - (_battle.moves[1] == 0 ? 0 : 1);
-    emit BattleMove(_battleName, _movesLeft == 1 ? true : false);
+    emit BattleMove(msg.sender, _battleName, _movesLeft == 1 ? true : false);
     
     if(_movesLeft == 0) {
       _awaitBattleResults(_battleName);

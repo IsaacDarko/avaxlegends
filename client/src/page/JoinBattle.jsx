@@ -66,7 +66,7 @@ const JoinBattle = () => {
                             </div>
                         )//then mapping though filtered battles to render them in individual divs for display
                         ) : (
-                        <p>Reload the page to see new battles</p>
+                        <p className='text-white text-bold'>Reload the page to see new battles</p>
                     )
                 }
 

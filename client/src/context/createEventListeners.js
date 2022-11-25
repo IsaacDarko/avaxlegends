@@ -28,7 +28,7 @@ const getCoords = (cardRef) => {
 }
 
 
-export const createEventListeners = ({ player1Ref, player2Ref, setSummonedPlayer, navigate, contract, provider, setWalletAddress, walletAddress, setShowAlert, setUpdateGameData } ) => {
+export const createEventListeners = ({ setBattleName, player1Ref, player2Ref, setSummonedPlayer, navigate, contract, provider, setWalletAddress, walletAddress, setShowAlert, setUpdateGameData, setGameData, setBattleEnded } ) => {
     
     //now to initialize the various event listeners
     const NewPlayerEventFilter = contract.filters.NewPlayer(); //get the newPlayer event filter from the contract
@@ -74,18 +74,20 @@ export const createEventListeners = ({ player1Ref, player2Ref, setSummonedPlayer
 
     //called AddNewEvent passing in the newBattleEventFilter so we are actively listening for this event emmitted by the contract
     AddNewEvent(NewBattleEventFilter, provider, ({ args }) => {
+        const wallet = localStorage.getItem('walletAddress');
         console.log('New Battle Started', args);
+        setBattleEnded(false);
         //check to see if the current wallet address is a player in this battle, update game data and move them to the battleground 
-        if( walletAddress.toLowerCase() === args.player1.toLowerCase() || walletAddress.toLowerCase() === args.player2.toLowerCase() ){
-            navigate(`/battle/${args.battleName}`)
-            console.log(args.battleName);
-
+        if( wallet.toLowerCase() === args.player1.toLowerCase() || wallet.toLowerCase() === args.player2.toLowerCase() ){
+            navigate(`/battle/${args.battleName}`);
+            setUpdateGameData((prevUpdateGameData) => prevUpdateGameData + 1)
             setShowAlert({
                 status: true,
                 type: 'success',
                 message: 'Round 1: FIGHT!!!'
             });
-            setUpdateGameData((prevUpdateGameData) => prevUpdateGameData + 1);
+
+            
         }
     });
 
@@ -106,8 +108,8 @@ export const createEventListeners = ({ player1Ref, player2Ref, setSummonedPlayer
     AddNewEvent(roundEndedEventFilter, provider, ({ args }) => {
         const wallet = localStorage.getItem('walletAddress');
         setWalletAddress(wallet);
-
         console.log('round ended', args, walletAddress);
+        
         for(let i = 0; i < args.damagedPlayers.length; i += 1){
             if(args.damagedPlayers[i] !== emptyAccount){
                 if(args.damagedPlayers[i] === walletAddress){
@@ -122,8 +124,9 @@ export const createEventListeners = ({ player1Ref, player2Ref, setSummonedPlayer
                 playAudio(defenseSound);
                 
             }
-        }
-        setUpdateGameData((prevUpdateGameData) => prevUpdateGameData + 1);
+        }        
+        setUpdateGameData((prevUpdateGameData) => prevUpdateGameData + 1)
+
     });
 
 
@@ -132,23 +135,37 @@ export const createEventListeners = ({ player1Ref, player2Ref, setSummonedPlayer
     const battleEndedEventFilter = contract.filters.BattleEnded();//get BattleEnded event filter from the contract and assigning to battleEndedEventFilter
     // called AddNewEvent passing in the battleEndedEventFilter so we are actively listening for this event when emmitted by the contract
     AddNewEvent(battleEndedEventFilter, provider, ({ args }) => {
-        console.log('Battle ended', args, walletAddress);
-        if(walletAddress.toLowerCase() === args.winner.toLowerCase()){
+        const wallet = localStorage.getItem('walletAddress');
+        if(wallet.toLowerCase() === args.winner.toLowerCase()){
+            console.log('Battle ended', args, wallet);
+            setGameData({ player:[], pendingBattles:[], activeBattle: null });
+            
             setShowAlert({
                 status: true,
                 type: 'success',
                 message: 'You Won'
             })
+                  
+        }else if(wallet.toLowerCase() === args.loser.toLowerCase()){
+            console.log('Battle ended', args, wallet);
+            setGameData({ player:[], pendingBattles:[], activeBattle: null });
             
-        }else if(walletAddress.toLowerCase() === args.loser.toLowerCase()){
             setShowAlert({
                 status: true,
                 type: 'failure',
                 message: 'You lost'
             })
-            
+           
         }
-        navigate('/create-battle');
+
+        setShowAlert({
+            status: true,
+            type: 'failure',
+            message: `The Battle Was Ended : ${args.loser.slice(0, 10)} lost`
+        })
+        setGameData({ player:[], pendingBattles:[], activeBattle: null });
+        setBattleEnded(true);      
     });
+
 
 }

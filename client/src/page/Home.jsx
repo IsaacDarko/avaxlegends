@@ -49,10 +49,11 @@ const Home = () => {
 
 
   useEffect(() => {
+    const wallet = localStorage.getItem('walletAddress');
     console.log(walletAddress);
     const checkPlayerToken = async () => {
-      const playerExists = await contract.isPlayer(walletAddress);
-      const pTokenExists = await contract.isPlayerToken(walletAddress);
+      const playerExists = await contract.isPlayer(wallet);
+      const pTokenExists = await contract.isPlayerToken(wallet);
       console.log(playerExists);
       console.log(pTokenExists);
       if(playerExists && pTokenExists)  navigate('/create-battle');

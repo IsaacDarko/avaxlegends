@@ -12,16 +12,19 @@ const GlobalContext = createContext();
 export const GlobalContextProvider = ({ children }) => {
     const player1Ref = useRef();
     const player2Ref = useRef();
-    const [step, setStep] = useState(1)
-    const [battleName, setBattleName] = useState('');
+    const [step, setStep] = useState(1);
     const [provider, setProvider] = useState('');
     const [contract, setContract] = useState('');
+    const [battleName, setBattleName] = useState('');
+    const [roundEnded, setRoundEnded] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
+    const [battleEnded, setBattleEnded] = useState(false);
     const [walletAddress, setWalletAddress] = useState('');
-    const [summonedPlayer, setSummonedPlayer] = useState('')
     const [updateGameData, setUpdateGameData] = useState(0);
+    const [summonedPlayer, setSummonedPlayer] = useState('');
     const [battleGround, setBattleGround] = useState('bg-astral');
     const [accountConnected, setAccountConnected] = useState(false);
+
     const [showAlert, setShowAlert] = useState({ status: false, type: 'info', message: '' });
     const [gameData, setGameData] = useState({ player:[], pendingBattles:[], activeBattle: null });
 
@@ -90,6 +93,17 @@ export const GlobalContextProvider = ({ children }) => {
 
 
 
+    const endGame = (name) => {
+        const battleName = name;
+        const endedBattle = gameData.activeBattle.filter((battle) => battle.name === battleName);
+        console.log(endedBattle);
+        setGameData({
+            activeBattle: endedBattle
+        })
+    }
+
+
+
     //this useEffect sets up the providers and then gets smart-contract(using web3modal, ethers, and backend abi) then sets them to state
     useEffect(() => {
         const setSmartContractAndProvider = async () =>{
@@ -122,9 +136,11 @@ export const GlobalContextProvider = ({ children }) => {
     useEffect(() => {
         if( step !== -1 && contract){        
             createEventListeners({ 
+                setBattleName,
                 summonedPlayer, 
                 setSummonedPlayer, 
-                navigate, 
+                navigate,
+                setRoundEnded,
                 contract, 
                 provider, 
                 setWalletAddress, 
@@ -133,6 +149,8 @@ export const GlobalContextProvider = ({ children }) => {
                 setUpdateGameData,
                 player1Ref,
                 player2Ref,
+                setBattleEnded,
+                setGameData
             });
         }
     }, [contract]);
@@ -158,7 +176,7 @@ export const GlobalContextProvider = ({ children }) => {
         if(errorMessage){
             const parsedErrorMessage = errorMessage?.reason?.slice('execution reverted: '.length).slice(0, -1);
             if(parsedErrorMessage){
-                showAlert({
+                setShowAlert({
                     status: true,
                     type: 'failure',
                     message: parsedErrorMessage
@@ -172,7 +190,9 @@ export const GlobalContextProvider = ({ children }) => {
 
     //set game data to state
     useEffect(() =>{
+        console.log('populating game data')
         const wallet = localStorage.getItem('walletAddress');
+
         const fetchGameData = async () =>{
             if(contract){
                 const fetchedBattles = await contract.getAllBattles();
@@ -194,19 +214,26 @@ export const GlobalContextProvider = ({ children }) => {
         }
 
         fetchGameData();
-    }, [contract])
+    }, [contract, battleEnded])
 
 
 
     return(
         <GlobalContext.Provider value={{
-            contract, provider, updateCurrentWalletAddress,
-            walletAddress, accountConnected, checkWallet,
-            setWalletAddress, summonedPlayer, setSummonedPlayer, 
-            gameData, battleName, setBattleName, updateGameData,
-            battleGround, setBattleGround, showAlert, setShowAlert, 
-            errorMessage, setErrorMessage, player1Ref, player2Ref,
-             demo:'test'
+            contract, provider, 
+            updateCurrentWalletAddress,
+            accountConnected, checkWallet,
+            walletAddress, setWalletAddress, 
+            summonedPlayer, setSummonedPlayer, 
+            gameData, setGameData,
+            battleName, setBattleName, 
+            updateGameData, setUpdateGameData,
+            battleGround, setBattleGround, 
+            showAlert, setShowAlert, 
+            errorMessage, setErrorMessage, 
+            player1Ref, player2Ref,
+             demo:'test',setRoundEnded,
+             battleEnded, setBattleEnded
         }}>
             {children}
         </GlobalContext.Provider>

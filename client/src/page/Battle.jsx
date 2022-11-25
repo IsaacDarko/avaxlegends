@@ -10,16 +10,25 @@ import { playAudio } from '../utils/animation';
 
 
 const Battle = () => {
-    const {contract, showAlert, setShowAlert, gameData, battleGround, setErrorMessage, player1Ref, player2Ref } = useGlobalContext();
+    const {contract, showAlert, setShowAlert, gameData, updateGameData, setUpdateGameData, battleGround, setErrorMessage, player1Ref, player2Ref, battleEnded } = useGlobalContext();
     const { battleName } = useParams();
     const [player1, setPlayer1] = useState({});
-    const [player2, setPlayer2] = useState({});    
+    const [player2, setPlayer2] = useState({});   
+    const [refresh, setRefresh] = useState(false) 
 
     const navigate = useNavigate();
 
 
+
+    useEffect(() => {
+        setRefresh(!refresh)
+    }, [])
+
+
+
     useEffect(() => {
         const getPlayerInfo = async () => {
+            console.log('fetching player stats');
             const wallet = localStorage.getItem('walletAddress').toLowerCase();
             try{
             //first initialize the player address variables for both player01 and player02
@@ -28,7 +37,7 @@ const Battle = () => {
                 console.log(wallet)
                 console.log(gameData.activeBattle);
             //use if condition to find which players in activebattle match the current user walletaddress and set that player to player01
-                if(gameData.activeBattle.players[0].toLowerCase() === wallet){
+                if(gameData.activeBattle.players[0].toLowerCase() === wallet.toLowerCase()){
                     console.log('scenario one');
                     player01Address = gameData.activeBattle.players[0];
                     player02Address = gameData.activeBattle.players[1];
@@ -67,7 +76,7 @@ const Battle = () => {
         }
 
         if(contract && gameData.activeBattle) getPlayerInfo();
-    }, [contract, gameData, battleName]);
+    }, [updateGameData, gameData, contract, battleName]);
 
 
 
@@ -90,12 +99,18 @@ const Battle = () => {
 
 
     useEffect(() => {
+        setUpdateGameData((prevUpdateGameData) => prevUpdateGameData + 1);
         const timer = setTimeout(() => {
-            if(!gameData?.activeBattle) navigate('/');
-        }, [8000]);
+            console.log(battleEnded);
+            if(!gameData?.activeBattle && battleEnded){
+                 navigate('/create-battle');
+            }
+            
+        }, [2000]);
 
         return () => clearTimeout(timer)
     }, []);
+
 
 
 

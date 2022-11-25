@@ -8,7 +8,7 @@ import { useGlobalContext } from '../context';
 
 const CreateBattle = () => {
   const [waitBattle, setWaitBattle] = useState(false)
-  const { walletAddress, setErrorMessage, contract, battleName, setBattleName, gameData} = useGlobalContext();
+  const { walletAddress, setErrorMessage, contract, battleName, setBattleName, gameData, battleEnded } = useGlobalContext();
   const navigate = useNavigate();
 
 
@@ -24,17 +24,33 @@ const CreateBattle = () => {
 
 
 
-  useEffect(() =>{
-    if(gameData?.activeBattle?.battleStatus === 1){
+  
+  /*useEffect(() =>{
+    if(gameData?.activeBattle?.battleStatus === 1 && battleEnded === true){
+      window.location.reload(false);
+      setBattleEnded(false)
+    }
+    else if(gameData?.activeBattle?.battleStatus === 1){
       navigate(`/battle/${gameData.activeBattle.name}`);
     }else if(gameData?.activeBattle?.battleStatus === 0){
       setWaitBattle(true);
     }else(
       setWaitBattle(false)
     )
-  }, [gameData, contract, walletAddress]);
+  }, [gameData, contract, walletAddress, battleEnded]);
+  */
 
 
+
+
+    useEffect(() => {
+      console.log(battleEnded);
+      if (gameData?.activeBattle?.battleStatus === 1 && battleEnded === false) {
+        navigate(`/battle/${gameData.activeBattle.name}`);
+      } else if (gameData?.activeBattle?.battleStatus === 0) {
+        setWaitBattle(true);
+      }
+    }, [gameData]);
 
 
 
