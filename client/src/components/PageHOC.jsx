@@ -1,12 +1,12 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { altlogo, heroImg } from '../assets/';
+import { altlogo, hero3Img } from '../assets/';
 import { useGlobalContext } from '../context';
 import styles from '../styles';
 import Alert from './Alert';
 
-const PageHOC = (Component, title, description) => () => {
+const PageHOC = (Component, title, description, hero) => () => {
     const { accountConnected, showAlert } = useGlobalContext();
     const navigate = useNavigate();
 
@@ -35,7 +35,7 @@ const PageHOC = (Component, title, description) => () => {
             </div>
 
             <div className='flex flex-1'>
-                <img className='w-full xl:h-full object-cover' src={heroImg} alt='heroImg' />
+                {hero}
             </div>
         </div>
     )

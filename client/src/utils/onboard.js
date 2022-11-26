@@ -4,6 +4,8 @@ function isEthereum() {
   return false;
 }
 
+
+
 function getChainID() {
   if (isEthereum())  return parseInt(window.ethereum.chainId, 16);
   
@@ -101,9 +103,14 @@ export const GetParams = async () => {
     response.step = 3;
 
     return response;
+  }  
+
+  if (currentBalance > 0.2) {
+    response.step = 4;
+
+    return response;
   }
 
-  return response;
 };
 
 export async function SwitchNetwork() {

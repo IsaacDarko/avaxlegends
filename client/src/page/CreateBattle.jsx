@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { CustomInput, CustomButton, GameLoad, PageHOC } from '../components';
+import { hero3Img } from '../assets/';
 import { useNavigate } from 'react-router-dom';
 import styles from '../styles';
 
@@ -82,5 +83,6 @@ const CreateBattle = () => {
 export default PageHOC (
     CreateBattle,
     <>Create A New Battle </>,
-    <>Create your own battle and wait for other players to join</>
+    <>Create your own battle and wait for other players to join</>,
+    <img className='w-full xl:h-full object-cover' src={hero3Img} alt='heroImg' />
 );

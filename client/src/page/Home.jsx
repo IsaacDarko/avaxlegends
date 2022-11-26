@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PageHOC, CustomInput, CustomButton } from '../components';
+import { hero4Img } from '../assets';
 import { useGlobalContext } from '../context';
 import styles from '../styles';
 
@@ -92,5 +93,6 @@ const Home = () => {
 export default PageHOC (
   Home,
   <>WELCOME TO AVAX LEGENDS <br/> A Web3 NFT Game</>,
-  <>Please Connect Your Wallet To Start Playing</>
+  <>Please Connect Your Wallet To Start Playing</>,
+  <img className='w-full xl:h-full object-cover' src={hero4Img} alt='heroImg' />
   );

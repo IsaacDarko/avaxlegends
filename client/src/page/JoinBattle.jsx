@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { CustomButton, GameLoad, PageHOC } from '../components';
+import { hero8Img } from '../assets';
 import { useNavigate } from 'react-router-dom';
 import { useGlobalContext } from '../context';
 import styles from '../styles';
@@ -81,5 +82,6 @@ const JoinBattle = () => {
 export default PageHOC(
     JoinBattle,
     <>Join An Ongoing Battle </>,
-    <>You Choose Any From The List</>
+    <>You Choose Any From The List</>,
+    <img className='w-full xl:h-full object-cover' src={hero8Img} alt='heroImg' />
 );

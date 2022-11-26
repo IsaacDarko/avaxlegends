@@ -4,6 +4,10 @@ import astral from './background/astral.jpg';
 import eoaalien from './background/eoaalien.jpg';
 import panight from './background/panight.jpg';
 import heroImg from './background/hero-img.jpg';
+import hero4Img from './background/altbg4.jpg';
+import hero2Img from './background/altbg7.jpg';
+import hero8Img from './background/altbg8.jpg';
+import hero3Img from './background/altbg9.jpg';
 
 // cards
 import ace from './Ace.png';
@@ -95,6 +99,10 @@ export {
   eoaalien,
   panight,
   heroImg,
+  hero2Img,
+  hero3Img,
+  hero4Img,
+  hero8Img,
 
   ace,
   bakezori,

@@ -11,11 +11,23 @@ const OnboardModal = () => {
   const { updateCurrentWalletAddress } = useGlobalContext();
   const [step, setStep] = useState(-1);
 
+
+
+
   async function resetParams() {
     const currentStep = await GetParams();
-    setStep(currentStep.step);
-    setIsOpen(currentStep.step !== -1);
+    if(currentStep.step === 4){
+      setStep(currentStep.step);
+      setIsOpen(currentStep.step !== 4);
+    }else{
+      setStep(currentStep.step);
+      setIsOpen(currentStep.step !== -1);
+    }
   }
+
+
+
+
 
   useEffect(() => {
     resetParams();
@@ -28,6 +40,9 @@ const OnboardModal = () => {
       resetParams();
     });
   }, []);
+
+
+
 
   const generateStep = (st) => {
     switch (st) {
@@ -81,9 +96,21 @@ const OnboardModal = () => {
         );
 
       default:
-        return <p className={styles.modalText}>Good to go!</p>;
+        return (
+          <>
+            <p className={styles.modalText}>Good to go!</p>
+            <CustomButton 
+              title="Great Let's Play"
+              handleClick={() => setIsOpen(false)}
+            />
+          </>
+        )
     }
   };
+
+
+
+
 
   return (
     <Modal
