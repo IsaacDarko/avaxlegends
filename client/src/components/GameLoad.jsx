@@ -9,8 +9,9 @@ import styles from '../styles';
 
 const GameLoad = () => {
     const navigate = useNavigate();
-    const { setWalletAddress, summonedPlayer } = useGlobalContext();
     const wallet = localStorage.getItem('walletAddress');
+    const playername = localStorage.getItem('playerName');
+    console.log(playername);
     return (
 
         <div className={`${styles.flexBetween} ${styles.gameLoadContainer}`}>
@@ -28,7 +29,8 @@ const GameLoad = () => {
                 <div className={styles.gameLoadPlayersBox}>
                     <div className={`${styles.flexCenter} flex-col`}>
                         <img src={player01} className={styles.gameLoadPlayerImg} />
-                        <p className={styles.gameLoadPlayerText}>{wallet.slice(0, 30)}</p>
+                        <p className={styles.label}>{playername}</p>
+                        <p className={styles.gameLoadPlayerText}>{wallet.slice(0, 15)}</p>
                     </div>
 
                     <h2 className={styles.gameLoadVS}>VS</h2>

@@ -109,7 +109,7 @@ const Battle = () => {
         }, [2000]);
 
         return () => clearTimeout(timer)
-    }, []);
+    }, [battleEnded]);
 
 
 

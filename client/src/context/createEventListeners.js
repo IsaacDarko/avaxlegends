@@ -28,12 +28,13 @@ const getCoords = (cardRef) => {
 }
 
 
-export const createEventListeners = ({ setBattleName, player1Ref, player2Ref, setSummonedPlayer, navigate, contract, provider, setWalletAddress, walletAddress, setShowAlert, setUpdateGameData, setGameData, setBattleEnded } ) => {
+export const createEventListeners = ({ player1Ref, player2Ref, setSummonedPlayer, navigate, contract, provider, setWalletAddress, walletAddress, setShowAlert, setUpdateGameData, setGameData, setBattleEnded } ) => {
     
     //now to initialize the various event listeners
     const NewPlayerEventFilter = contract.filters.NewPlayer(); //get the newPlayer event filter from the contract
     //called AddNewEvent passing in the NewPlayerEventFilter so we are actively listening for this event emmitted by the contract
     AddNewEvent(NewPlayerEventFilter, provider, ({ args }) => {
+        let name
         console.log('New Player Created', args);
         if(walletAddress === args.owner){
             setShowAlert({
@@ -42,6 +43,9 @@ export const createEventListeners = ({ setBattleName, player1Ref, player2Ref, se
                 message: `${args.name} has been registered successfully`
             })
             setSummonedPlayer(args.name);
+            name = args.name;
+            console.log(name)
+            localStorage.setItem('playerName', name);
             window.location.reload(false);
         }
     });
@@ -71,7 +75,6 @@ export const createEventListeners = ({ setBattleName, player1Ref, player2Ref, se
 
 
     const NewBattleEventFilter = contract.filters.NewBattle(); //get NewBattle event filter from the contract
-
     //called AddNewEvent passing in the newBattleEventFilter so we are actively listening for this event emmitted by the contract
     AddNewEvent(NewBattleEventFilter, provider, ({ args }) => {
         const wallet = localStorage.getItem('walletAddress');
@@ -93,9 +96,7 @@ export const createEventListeners = ({ setBattleName, player1Ref, player2Ref, se
 
 
 
-
     const battleMoveEventFilter = contract.filters.BattleMove(); //get BattleMove event filter from the contract
-
     //called AddNewEvent passing in the battleMoveEventFilter so we are actively listening for this event when emmitted by the contract
     AddNewEvent(battleMoveEventFilter, provider, ({ args }) => {
         console.log('Battle Move Initiated', args);
@@ -130,7 +131,6 @@ export const createEventListeners = ({ setBattleName, player1Ref, player2Ref, se
     });
 
 
-
     
     const battleEndedEventFilter = contract.filters.BattleEnded();//get BattleEnded event filter from the contract and assigning to battleEndedEventFilter
     // called AddNewEvent passing in the battleEndedEventFilter so we are actively listening for this event when emmitted by the contract
@@ -157,7 +157,7 @@ export const createEventListeners = ({ setBattleName, player1Ref, player2Ref, se
             })
            
         }
-
+        setGameData({ player:[], pendingBattles:[], activeBattle: null });
         setShowAlert({
             status: true,
             type: 'failure',
@@ -166,6 +166,5 @@ export const createEventListeners = ({ setBattleName, player1Ref, player2Ref, se
         setGameData({ player:[], pendingBattles:[], activeBattle: null });
         setBattleEnded(true);      
     });
-
 
 }

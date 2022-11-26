@@ -25,9 +25,8 @@ const Home = () => {
     try{
       const wallet = localStorage.getItem('walletAddress');
       console.log(contract);
-      console.log(walletAddress);
       //check if the current wallet already has a player registered
-      const playerExists = await contract.isPlayer(walletAddress);
+      const playerExists = await contract.isPlayer(wallet);
       if(!playerExists){
         await contract.registerPlayer(playerName, playerName);
         setShowAlert({
