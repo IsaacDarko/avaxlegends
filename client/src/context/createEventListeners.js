@@ -53,7 +53,6 @@ export const createEventListeners = ({ player1Ref, player2Ref, setSummonedPlayer
 
 
     const NewGameTokenEventFilter = contract.filters.NewGameToken(); //get NewBattle event filter from the contract
-
     //called AddNewEvent passing in the newBattleEventFilter so we are actively listening for this event emmitted by the contract
     AddNewEvent(NewGameTokenEventFilter, provider, ({ args }) => {
         const wallet = localStorage.getItem('walletAddress');
@@ -79,9 +78,11 @@ export const createEventListeners = ({ player1Ref, player2Ref, setSummonedPlayer
     AddNewEvent(NewBattleEventFilter, provider, ({ args }) => {
         const wallet = localStorage.getItem('walletAddress');
         console.log('New Battle Started', args);
-        setBattleEnded(false);
+        
         //check to see if the current wallet address is a player in this battle, update game data and move them to the battleground 
-        if( wallet.toLowerCase() === args.player1.toLowerCase() || wallet.toLowerCase() === args.player2.toLowerCase() ){
+        if( wallet.toLowerCase() === args.player1.toLowerCase() || wallet.toLowerCase() === args.player2.toLowerCase() ){            
+            setUpdateGameData((prevUpdateGameData) => prevUpdateGameData + 1);
+            setBattleEnded(false);
             navigate(`/battle/${args.battleName}`);
             setUpdateGameData((prevUpdateGameData) => prevUpdateGameData + 1)
             setShowAlert({
@@ -90,8 +91,21 @@ export const createEventListeners = ({ player1Ref, player2Ref, setSummonedPlayer
                 message: 'Round 1: FIGHT!!!'
             });
 
-            
+            const informer = () => {
+                setShowAlert({
+                    status: true,
+                    type: 'info',
+                    message: 'You Can Reload If Your Game Stats Are Not Displayed Yet'
+                });
+            }
+
+            const timer = setTimeout(() => {
+                informer()
+            }, [7000]);
         }
+        setUpdateGameData((prevUpdateGameData) => prevUpdateGameData + 1);
+        setBattleEnded(false);
+
     });
 
 
@@ -160,11 +174,13 @@ export const createEventListeners = ({ player1Ref, player2Ref, setSummonedPlayer
         setGameData({ player:[], pendingBattles:[], activeBattle: null });
         setShowAlert({
             status: true,
-            type: 'failure',
-            message: `The Battle Was Ended : ${args.loser.slice(0, 10)} lost`
+            type: `${wallet.toLowerCase() === args.winner.toLowerCase() ? 'success' : 'failure'}`,
+            message: `The Battle Was Ended : ${
+                wallet.toLowerCase() === args.winner.toLowerCase() ? 'You Won' : 'You Lost'}`
         })
         setGameData({ player:[], pendingBattles:[], activeBattle: null });
-        setBattleEnded(true);      
+        setBattleEnded(true);    
+        navigate('/')  
     });
 
 }
