@@ -4,6 +4,7 @@ const styles = {
   normalText: 'font-rajdhani font-normal text-[24px] text-siteWhite',
   footerText: 'font-rajdhani font-medium text-base text-white',
   infoText: 'font-rajdhani font-medium text-lg text-siteViolet cursor-pointer',
+  inforText: 'font-rajdhani font-medium text-lg text-siteRoseGold cursor-pointer',
 
   // glassmorphism
   glassEffect: 'bg-white backdrop-filter backdrop-blur-lg bg-opacity-10',
@@ -15,7 +16,7 @@ const styles = {
   hocBodyWrapper: 'flex-1 flex justify-center flex-col xl:mt-0 my-16',
 
   // join battle page
-  joinHeadText: 'font-rajdhani font-semibold text-2xl text-white mb-3',
+  joinHeadText: 'font-rajdhani font-semibold text-2xl text-siteRoseGold mb-3',
   joinContainer: 'flex flex-col gap-3 mt-3 mb-5',
   joinBattleTitle: 'font-rajdhani font-normal text-xl text-white',
   joinLoading: 'font-rajdhani font-normal text-xl text-white',
@@ -49,11 +50,11 @@ const styles = {
   cardText: 'font-rajdhani text-[26px] font-bold text-white',
 
   // custom button component
-  btn: 'px-4 py-2 rounded-lg bg-siteViolet w-fit text-white font-rajdhani font-bold',
+  btn: 'px-4 py-2 rounded-lg bg-siteRoseGold w-fit text-white font-rajdhani font-bold',
 
   // custom input component
-  label: 'font-rajdhani font-semibold text-2xl text-white mb-3',
-  input: 'bg-siteDimBlack text-white outline-none focus:outline-siteViolet p-4 rounded-md sm:max-w-[50%] max-w-full',
+  label: 'font-rajdhani font-semibold text-2xl text-siteRoseGold mb-3',
+  input: 'bg-siteDimBlack text-white outline-none focus:outline-siteRoseGold p-4 rounded-md sm:max-w-[50%] max-w-full',
 
   // gameload component
   gameLoadContainer: 'absolute inset-0 z-10 w-full h-screen gameload flex-col',
@@ -67,6 +68,7 @@ const styles = {
   // gameInfo component
   gameInfoIconBox: 'absolute right-2 top-1/2',
   gameInfoIcon: 'bg-siteViolet w-10 h-10 rounded-md cursor-pointer',
+  gameInforIcon: 'bg-siteRoseGold w-10 h-10 rounded-md cursor-pointer',
   gameInfoIconImg: 'w-3/5 h-3/5 object-contain invert',
   gameInfoSidebar: 'absolute p-6 right-0 top-0 h-screen rounded-md flex-col transition-all ease-in duration-300',
   gameInfoSidebarCloseBox: 'flex justify-end mb-8',

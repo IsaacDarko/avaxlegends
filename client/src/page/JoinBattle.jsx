@@ -73,7 +73,7 @@ const JoinBattle = () => {
 
             </div>
 
-            <p className={styles.infoText} onClick={() => navigate('/create-battle')}>Or Create a New Battle </p>
+            <p className={styles.inforText} onClick={() => navigate('/create-battle')}>Or Create a New Battle </p>
 
         </>
     )

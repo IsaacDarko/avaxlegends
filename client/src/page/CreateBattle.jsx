@@ -74,7 +74,7 @@ const CreateBattle = () => {
           restStyles='mt-6'
         />
       </div>
-      <p className={styles.infoText} onClick={() => navigate('/join-battle')}> Or Join an existing battle </p>
+      <p className={styles.inforText} onClick={() => navigate('/join-battle')}> Or Join an existing battle </p>
     </>
   )
 

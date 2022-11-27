@@ -8,6 +8,7 @@ module.exports = {
         siteDimBlack: '#191d23',
         siteViolet: '#7f46f0',
         siteWhite: '#9eacc7',
+        siteRoseGold: '#fc8844'
       },
       backgroundImage: {
         astral: "url('/src/assets/background/astral.jpg')",

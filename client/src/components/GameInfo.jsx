@@ -27,7 +27,7 @@ const GameInfo = () => {
     <>
       <div className={styles.gameInfoIconBox}>
         <div
-          className={`${styles.gameInfoIcon} ${styles.flexCenter}`}
+          className={`${styles.gameInforIcon} ${styles.flexCenter}`}
           onClick={() => setToggleSidebar(true)}
         >
           <img
